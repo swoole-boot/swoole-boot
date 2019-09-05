@@ -1,15 +1,21 @@
 {
-  "name":"jhq0113/swoole-boot",
+  "name":"cockroach/swoole-boot",
   "description": "swoole-boot",
   "keywords": ["swoole-boot","swoole","elephant","yaf","cockroach","php"],
   "license": "MIT",
-  "homepage":"https://github.com/jhq0113/swoole-boot",
+  "homepage":"https://github.com/swoole-boot/swoole-boot",
   "type": "library",
   "authors": [
     {
       "name": "Jiang Haiqiang",
       "email": "jhq0113@163.com",
       "homepage": "https://github.com/jhq0113",
+      "role": "Developer"
+    },
+    {
+      "name": "Yan Jingwen",
+      "email": "18636002809@163.com",
+      "homepage": "https://github.com/wandeCat",
       "role": "Developer"
     }
   ],
