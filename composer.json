@@ -28,7 +28,8 @@
   },
   "autoload": {
     "psr-4": {
-      "common\\": "common/"
+      "app\\": "app/",
+      "boot\\": "framework/"
     }
   }
 }
