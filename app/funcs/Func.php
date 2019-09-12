@@ -1,23 +1,25 @@
 <?php
 namespace app\funcs;
 
+use cockroach\extensions\EReturn;
+
 /**
- * Class GetList
+ * Class Func
  * @package app\funcs
- * @datetime 2019/9/11 13:55
+ * @datetime 2019/9/12 12:52
  * @author roach
  * @email jhq0113@163.com
  */
-class GetList extends Func
+class Func extends \boot\Func
 {
     /**
-     * @return mixed|string|void
-     * @datetime 2019/9/12 14:26
+     * @return mixed|void
+     * @datetime 2019/9/12 13:41
      * @author roach
      * @email jhq0113@163.com
      */
     public function run()
     {
-        return $this->params;
+        return EReturn::success('Hello World');
     }
 }

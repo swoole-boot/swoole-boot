@@ -1,23 +1,23 @@
 <?php
 namespace app\funcs;
 
-/**
- * Class GetList
+/**处理内部请求
+ * Class Inner
  * @package app\funcs
- * @datetime 2019/9/11 13:55
+ * @datetime 2019/9/12 14:10
  * @author roach
  * @email jhq0113@163.com
  */
-class GetList extends Func
+class Inner extends \boot\Func
 {
     /**
-     * @return mixed|string|void
-     * @datetime 2019/9/12 14:26
+     * @return mixed|string
+     * @datetime 2019/9/12 14:16
      * @author roach
      * @email jhq0113@163.com
      */
     public function run()
     {
-        return $this->params;
+        return 'ok';
     }
 }

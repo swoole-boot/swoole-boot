@@ -1,6 +1,8 @@
 <?php
 namespace boot\server;
 
+use boot\route\Route;
+
 /**
  * Class SwooleBoot
  * @package boot\server
@@ -10,6 +12,14 @@ namespace boot\server;
  */
 class SwooleBoot extends Server
 {
+    /**
+     * @var Route
+     * @datetime 2019/9/12 12:59
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $router = [];
+
     /**
      * @var array
      * @datetime 2019/9/11 13:20
@@ -54,10 +64,6 @@ class SwooleBoot extends Server
      */
     public function onReceive(\Swoole\Server $server, $fd, $from_id, $data)
     {
-        $serverParams = [
-            'server'   => $server,
-            'fd'       => $fd,
-            'from_id'  => $from_id
-        ];
+        return $this->router->tcp($server,$fd,$from_id,$data);
     }
 }

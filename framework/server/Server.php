@@ -64,7 +64,7 @@ abstract class Server extends \Swoole\Server
     public function init()
     {
         $this->setting = array_merge($this->_defaultSettings,$this->setting);
-        //$this->set($this->setting);
+        $this->set($this->setting);
     }
 
     /**绑定事件
@@ -82,7 +82,7 @@ abstract class Server extends \Swoole\Server
      * @author roach
      * @email jhq0113@163.com
      */
-    public $pidFile = '/var/swoole-boot.pid';
+    public $pidFile;
 
     /**
      * @param \Swoole\Server $server
@@ -138,6 +138,9 @@ abstract class Server extends \Swoole\Server
             return false;
         }
 
+        //绑定事件
+        $this->bindEvent();
+
         return true;
     }
 
@@ -162,7 +165,7 @@ abstract class Server extends \Swoole\Server
         $pid = $this->_getPid();
         if(empty($pid)) {
             ECli::error('stop failed:未找到pid');
-            return false;
+            exit();
         }
 
         `/bin/kill -s SIGTERM {$pid}`;

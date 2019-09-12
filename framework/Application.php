@@ -63,7 +63,7 @@ class Application
      */
     public function init()
     {
-        $serverClass = $this->server['class'] ?: SwooleBoot::class;
+        $serverClass = isset($this->server['class']) ? $this->server['class'] : SwooleBoot::class;
         $serverConfig = $this->server;
         $this->server = new $serverClass($this->host,$this->port,$this->mode,$this->type);
 
@@ -101,7 +101,7 @@ class Application
             exit();
         }
 
-        call_user_func($this,$cmd);
+        call_user_func([$this,$cmd]);
     }
 
     /**
@@ -119,7 +119,7 @@ class Application
         /**
          * 一键协程
          */
-        Runtime::enableCoroutine();
+        Runtime::enableCoroutine(true);
 
         ECli::info('starting');
 
