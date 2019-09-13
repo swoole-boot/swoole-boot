@@ -8,7 +8,6 @@
 
 use cockroach\extensions\EEnvironment;
 use cockroach\base\Container;
-use cockroach\extensions\ECli;
 use boot\Application;
 
 require __DIR__.'/conf/bootstrap.php';

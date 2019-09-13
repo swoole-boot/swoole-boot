@@ -2,6 +2,7 @@
 namespace boot\route;
 
 use boot\Func;
+use boot\server\Server;
 use cockroach\base\Container;
 use cockroach\extensions\EReturn;
 
@@ -70,9 +71,12 @@ class SwooleBoot extends Route
      * @author roach
      * @email jhq0113@163.com
      */
-    public function tcp(\Swoole\Server $server, $fd, $from_id, $data)
+    public function tcp(\Swoole\Server &$server, $fd, $from_id, $data)
     {
-        $this->logger->info('receive data :'.$data);
+        /**
+         * @var \boot\server\SwooleBoot $server
+         */
+        $server->logger->info('receive data :'.$data);
 
         //包长度小于协议包头大小,属于内部请求
         if(strlen($data) < $this->packager->headerSize) {
@@ -82,7 +86,7 @@ class SwooleBoot extends Route
         //解包
         $package = $this->packager->unpack($data);
 
-        $this->logger->info(json_encode($package,JSON_UNESCAPED_UNICODE));
+        $server->logger->info(json_encode($package,JSON_UNESCAPED_UNICODE));
 
         //校验包协议
         if(!isset($package['header'], $package['data']['func'], $package['data']['params'])) {
@@ -94,6 +98,9 @@ class SwooleBoot extends Route
             $packData = $this->packager->packBySerializeId(EReturn::error('requestId is required'),$package['header']['Serialize']);
             return $this->tcpSend($server,$fd,$from_id,$packData);
         }
+
+        //设置请求id
+        $server->logger->setRequestId($package['data']['requestId']);
 
         //校验请求ip
         if(!isset($package['data']['clientIp'])) {
@@ -109,7 +116,7 @@ class SwooleBoot extends Route
         }
 
         //路由请求
-        $this->route($package['data'], function ($response) use(&$server,$fd,$from_id,$package){
+        $this->route($server,$package['data'], function ($response) use(&$server,$fd,$from_id,$package){
             //按照请求包的序列化方式封包
             $packData = $this->packager->packBySerializeId($response,$package['header']['Serialize']);
             return $this->tcpSend($server,$fd,$from_id,$packData);
@@ -117,14 +124,15 @@ class SwooleBoot extends Route
     }
 
     /**
-     * @param $data
-     * @param $callback
+     * @param Server   $server
+     * @param mixed    $data
+     * @param callable $callback
      * @return mixed
-     * @datetime 2019/9/12 14:17
+     * @datetime 2019/9/13 14:54
      * @author roach
      * @email jhq0113@163.com
      */
-    public function route($data,$callback)
+    public function route(&$server,$data,$callback)
     {
         $func = $this->funcNamespace.'\\'.$data['func'];
         if(!class_exists($func)) {
@@ -139,6 +147,8 @@ class SwooleBoot extends Route
             'params'    => $data['params'],
             'requestId' => $data['requestId'],
             'clientIp'  => $data['clientIp'],
+            'logger'    => $server->logger,
+            'server'    => $server
         ]);
 
         $return = $func->beforeRun();

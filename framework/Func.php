@@ -1,8 +1,10 @@
 <?php
 namespace boot;
 
+use boot\server\Server;
 use cockroach\base\Cockroach;
 use cockroach\extensions\EReturn;
+use cockroach\log\Driver;
 
 /**
  * Class Func
@@ -13,6 +15,22 @@ use cockroach\extensions\EReturn;
  */
 abstract class Func extends Cockroach
 {
+    /**
+     * @var Server
+     * @datetime 2019/9/13 14:57
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $server;
+
+    /**
+     * @var Driver
+     * @datetime 2019/9/13 14:39
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $logger;
+
     /**
      * @var mixed
      * @datetime 2019/9/12 13:09

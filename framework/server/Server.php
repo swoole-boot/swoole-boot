@@ -2,13 +2,17 @@
 namespace boot\server;
 
 use boot\Application;
+use boot\route\Route;
 use cockroach\base\Container;
 use cockroach\extensions\ECli;
 use cockroach\extensions\EFile;
+use cockroach\log\Driver;
 
 /**
  * Class Server
  * @package boot\server
+ * @property Driver $logger
+ * @property Route  $router
  * @datetime 2019/9/11 12:55
  * @author roach
  * @email jhq0113@163.com
@@ -118,14 +122,6 @@ abstract class Server extends \Swoole\Server
     }
 
     /**
-     * @var int
-     * @datetime 2019/9/11 13:37
-     * @author roach
-     * @email jhq0113@163.com
-     */
-    public $forceStopTimeout = 10;
-
-    /**
      * @return bool
      * @datetime 2019/9/11 13:44
      * @author roach
@@ -153,39 +149,8 @@ abstract class Server extends \Swoole\Server
     public function onStart(\Swoole\Server $server)
     {
         $this->_createPid($server);
-    }
 
-    /**手动停止服务
-     * @datetime 2019/9/11 13:38
-     * @author roach
-     * @email jhq0113@163.com
-     */
-    public function forceStop()
-    {
-        $pid = $this->_getPid();
-        if(empty($pid)) {
-            ECli::error('stop failed:未找到pid');
-            exit();
-        }
-
-        `/bin/kill -s SIGTERM {$pid}`;
-
-        $time = time();
-        while(true){
-            $current = time();
-
-            if(!file_exists($this->pidFile)) {
-                return true;
-            }
-
-            if($current - $time > $this->forceStopTimeout) {
-                return false;
-            }
-
-            usleep(100);
-        }
-
-        return true;
+        $this->_app->trigger(Application::EVENT_SERVER_START);
     }
 
     /**
@@ -197,6 +162,7 @@ abstract class Server extends \Swoole\Server
     public function onStop(\Swoole\Server $server)
     {
         $this->_deletePid();
+        $this->_app->trigger(Application::EVENT_SERVER_STOP);
     }
     //endregion
 
@@ -216,8 +182,9 @@ abstract class Server extends \Swoole\Server
      */
     protected function _initComponents()
     {
-        foreach ($this->components as $key => $component) {
-            Container::set($key,$component);
+        foreach ($this->components as $key => &$component) {
+            $this->$key = Container::insure($component);
+            //Container::set($key,$component);
         }
     }
 
@@ -232,6 +199,8 @@ abstract class Server extends \Swoole\Server
     {
         //初始化组件
         $this->_initComponents();
+
+        $this->_app->trigger(Application::EVENT_WORKER_START);
     }
 
     /**
@@ -243,7 +212,7 @@ abstract class Server extends \Swoole\Server
      */
     public function onWorkerExit(\Swoole\Server $sever, $workerId)
     {
-
+        $this->_app->trigger(Application::EVENT_WORKER_EXIT);
     }
 
     /**
@@ -258,6 +227,7 @@ abstract class Server extends \Swoole\Server
      */
     public function onWorkerError(\Swoole\Server $server, $workerId, $workerPid, $exitCode, $signal)
     {
+        $this->_app->trigger(Application::EVENT_WORKER_ERROR);
     }
     //endregion
 }
