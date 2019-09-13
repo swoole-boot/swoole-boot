@@ -147,10 +147,10 @@ class Application
         $this->server = new $serverClass($this->host,$this->port,$this->mode,$this->type);
         $this->server->setApp($this);
         Container::assem($this->server,$serverConfig);
-        unset($serverConfig);
 
         //服务初始化配置
         $this->server->init();
+        unset($serverConfig);
         $status = $this->server->beforeStart();
         if(!$status) {
             return;

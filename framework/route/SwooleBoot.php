@@ -76,7 +76,7 @@ class SwooleBoot extends Route
         /**
          * @var \boot\server\SwooleBoot $server
          */
-        $server->logger->info('receive data :'.$data);
+        $server->logger->info('receive data :'.json_encode($data,JSON_UNESCAPED_UNICODE));
 
         //包长度小于协议包头大小,属于内部请求
         if(strlen($data) < $this->packager->headerSize) {
@@ -94,16 +94,16 @@ class SwooleBoot extends Route
         }
 
         //校验请求id
-        if(!isset($package['data']['requestId'])) {
+        if(!isset($package['data']['params']['requestId'])) {
             $packData = $this->packager->packBySerializeId(EReturn::error('requestId is required'),$package['header']['Serialize']);
             return $this->tcpSend($server,$fd,$from_id,$packData);
         }
 
         //设置请求id
-        $server->logger->setRequestId($package['data']['requestId']);
+        $server->logger->setRequestId($package['data']['params']['requestId']);
 
         //校验请求ip
-        if(!isset($package['data']['clientIp'])) {
+        if(!isset($package['data']['params']['clientIp'])) {
             $packData = $this->packager->packBySerializeId(EReturn::error('clientIp is required'),$package['header']['Serialize']);
             return $this->tcpSend($server,$fd,$from_id,$packData);
         }
@@ -145,8 +145,8 @@ class SwooleBoot extends Route
         $func = Container::createCockroach([
             'class'     => $func,
             'params'    => $data['params'],
-            'requestId' => $data['requestId'],
-            'clientIp'  => $data['clientIp'],
+            'requestId' => $data['params']['requestId'],
+            'clientIp'  => $data['params']['clientIp'],
             'logger'    => $server->logger,
             'server'    => $server
         ]);

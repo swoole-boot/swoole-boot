@@ -61,12 +61,14 @@ abstract class Server extends \Swoole\Server
     ];
 
     /**
-     * @datetime 2019/9/11 14:14
+     * @param array $config
+     * @datetime 2019/9/13 17:54
      * @author roach
      * @email jhq0113@163.com
      */
-    public function init()
+    public function init($config = [])
     {
+        var_dump($this->setting);die;
         $this->setting = array_merge($this->_defaultSettings,$this->setting);
         $this->set($this->setting);
     }
