@@ -65,7 +65,7 @@ class SwooleBoot extends Route
      * @param \Swoole\Server $server
      * @param int            $fd
      * @param int            $from_id
-     * @param string         $data
+     * @param                $data
      * @return mixed|void
      * @datetime 2019/9/12 13:23
      * @author roach
@@ -76,7 +76,7 @@ class SwooleBoot extends Route
         /**
          * @var \boot\server\SwooleBoot $server
          */
-        $server->logger->info('receive data :'.json_encode($data,JSON_UNESCAPED_UNICODE));
+        $server->logger->info('receive data:'.base64_encode($data));
 
         //包长度小于协议包头大小,属于内部请求
         if(strlen($data) < $this->packager->headerSize) {
