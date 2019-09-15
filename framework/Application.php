@@ -94,12 +94,14 @@ class Application
     public $type = SWOOLE_SOCK_TCP;
 
     /**
-     * @datetime 2019/9/11 14:08
+     * @param array $config
+     * @datetime 2019/9/15 7:46 PM
      * @author roach
      * @email jhq0113@163.com
      */
-    public function init()
+    public function init($config=[])
     {
+        Container::assem($this,$config);
         $this->server['class'] = isset($this->server['class']) ? $this->server['class'] : SwooleBoot::class;
     }
 

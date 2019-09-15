@@ -9,7 +9,10 @@ return [
         //服务配置
         'setting' => [
             //工作进程数量，建议为cpu数量的4倍，一个进程占用内存可以按照40M估算
-            'worker_num' => 16
+            'worker_num' => 16,
+            'max_request' => 200,
+            'user'        => 'www',
+            'group'       => 'www'
         ],
         //组件
         'components' => [
