@@ -2,6 +2,7 @@
 namespace boot\db;
 
 use cockroach\base\Cockroach;
+use cockroach\base\Container;
 use cockroach\extensions\EString;
 
 /**
@@ -163,5 +164,20 @@ abstract class Model extends Cockroach
         $params = [];
         $sql = 'DELETE FROM '.static::formatField(static::$tableName).static::analyWhere($where,$params, $isOr);
         return static::getDb()->execute($sql,$params);
+    }
+
+    /**
+     * @return Query
+     * @datetime 2019/9/17 10:55 PM
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    static public function find()
+    {
+        return Container::insure([
+            'class' => 'boot\db\Query',
+            'table' => static::$tableName,
+            'db'    => static::getDb()
+        ]);
     }
 }
