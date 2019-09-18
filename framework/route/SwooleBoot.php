@@ -5,6 +5,7 @@ use boot\Func;
 use boot\server\Server;
 use cockroach\base\Container;
 use cockroach\extensions\EReturn;
+use cockroach\extensions\EValidate;
 
 /**
  * Class SwooleBoot
@@ -154,6 +155,15 @@ class SwooleBoot extends Route
         $return = $func->beforeRun();
         if(!EReturn::success($return)) {
             return call_user_func($callback,$return);
+        }
+
+        //增加数据校验
+        $rules = $func->rules();
+        if(!empty($rules)) {
+            $result = EValidate::rules($rules,$data['params']);
+            if(!empty($result)) {
+                return call_user_func($callback,EReturn::error(EReturn::ERROR_PARAMS,'参数错误',$result));
+            }
         }
 
         $data = $func->run();

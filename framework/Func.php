@@ -66,6 +66,17 @@ abstract class Func extends Cockroach
         return EReturn::success('');
     }
 
+    /**数据校验规则
+     * @return array
+     * @datetime 2019/9/18 11:29 PM
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function rules()
+    {
+        return [];
+    }
+
     /**执行
      * @return mixed
      * @datetime 2019/9/12 13:06
