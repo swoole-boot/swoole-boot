@@ -3,7 +3,6 @@ namespace boot\db;
 
 use cockroach\base\Cockroach;
 use cockroach\base\Container;
-use cockroach\extensions\EString;
 
 /**
  * Class Model
@@ -39,51 +38,6 @@ abstract class Model extends Cockroach
     abstract public static function getDb();
 
     /**
-     * @param string $field
-     * @return string
-     * @datetime 2019/9/17 10:07 PM
-     * @author roach
-     * @email jhq0113@163.com
-     */
-    static public function formatField($field)
-    {
-        return '`'.$field.'`';
-    }
-
-    /**
-     * @param array|string $where
-     * @param array        $params
-     * @param bool         $isOr
-     * @return string
-     * @datetime 2019/9/17 10:46 PM
-     * @author roach
-     * @email jhq0113@163.com
-     */
-    static public function analyWhere($where, &$params = [], $isOr = false)
-    {
-        if(empty($where)) {
-            $where = '';
-        }elseif (is_string($where)) {
-            $where = ' WHERE '.$where;
-        }elseif (is_array($where)) {
-            $andWhere = [];
-            foreach ($where as $field => $value) {
-                if(is_array($value)) {
-                    array_push($andWhere,static::formatField($field).'IN('.EString::repeatAndRTrim('?,',count($value)).')');
-                    $params = array_merge($params,$value);
-                }else {
-                    array_push($params,$value);
-                    array_push($andWhere,static::formatField($field).'=?');
-                }
-            }
-            $where = ' WHERE '.implode(' '.($isOr ? 'OR' : 'AND').' ',$andWhere);
-            unset($andWhere);
-        }
-
-        return $where;
-    }
-
-    /**
      * @param array $columns
      * @param bool  $ignore
      * @return ExecuteResult
@@ -106,21 +60,8 @@ abstract class Model extends Cockroach
      */
     static public function multiInsert($rows, $ignore = false)
     {
-        $fields = array_map(function($field){
-            return static::formatField($field);
-        },array_keys($rows[0]));
-
-
-        $placeHolder = '('.EString::repeatAndRTrim('?,',count($rows[0])).')';
-        $placeHolder = EString::repeatAndRTrim($placeHolder.',',count($rows));
-
-        $values       = [];
-        foreach ($rows as $row) {
-            array_merge($values,array_values($row));
-        }
-
-        $sql = 'INSERT '.($ignore ? 'IGNORE' :'').' INTO '.static::formatField(static::$tableName).'('.implode(',',$fields).')VALUES'.$placeHolder;
-        return static::getDb()->execute($sql,$values);
+        $sql = Query::multiInsert(static::$tableName,$rows,$params,$ignore);
+        return static::getDb()->execute($sql,$params);
     }
 
     /**
@@ -134,20 +75,7 @@ abstract class Model extends Cockroach
      */
     static public function updateAll($set, $where, $isOr = false)
     {
-        $params = [];
-
-        if(is_array($set)) {
-            $sets = [];
-            foreach ($set as $field => $value) {
-                array_push($params,$value);
-                array_push($sets,static::formatField($field).'=?');
-            }
-
-            $set = implode(',',$sets);
-        }
-
-        $sql = 'UPDATE `'.static::$tableName.'` SET '.$set.static::analyWhere($where,$params,$isOr);
-
+        $sql = Query::updateAll(static::$tableName,$set,$where,$params,$isOr);
         return static::getDb()->execute($sql,$params);
     }
 
@@ -161,8 +89,7 @@ abstract class Model extends Cockroach
      */
     static public function deleteAll($where, $isOr = false)
     {
-        $params = [];
-        $sql = 'DELETE FROM '.static::formatField(static::$tableName).static::analyWhere($where,$params, $isOr);
+        $sql = Query::deleteAll(static::$tableName,$where,$params,$isOr);
         return static::getDb()->execute($sql,$params);
     }
 
