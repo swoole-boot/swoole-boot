@@ -1,6 +1,7 @@
 <?php
 namespace boot\db;
 
+use boot\Application;
 use cockroach\base\Cockroach;
 use cockroach\base\Container;
 use cockroach\log\ILog;
@@ -26,6 +27,11 @@ class Pool extends Cockroach
         $this->masterConfig = $config['masterConfig'];
         $this->slaveConfig  = $config['slaveConfig'] ?? $this->masterConfig;
         unset($config['masterConfig'],$config['slaveConfig']);
+
+        //初始化日志
+        if(!isset($config['logger'])) {
+            $this->logger = Application::$app->server->logger;
+        }
 
         parent::init($config);
     }
@@ -135,15 +141,6 @@ class Pool extends Cockroach
      */
     public function createConnection($isMaster = false)
     {
-        if($isMaster && !isset($this->masterConfig['logger'])) {
-            $this->masterConfig['logger'] = $this->logger;
-            return Container::insure($this->masterConfig,'boot\db\Mysql');
-        }
-
-        if(!isset($this->slaveConfig['logger'])) {
-            $this->slaveConfig['logger'] = $this->logger;
-        }
-
         return Container::insure($this->slaveConfig,'boot\db\Mysql');
     }
 

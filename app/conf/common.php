@@ -31,14 +31,9 @@ return [
             ],
             'db' => [
                 'class' => 'boot\db\Pool',
-                'logger' => [
-                    'class'    => 'cockroach\log\Seaslog',
-                    'app'      => 'db',
-                    'basePath' => '/tmp/logs/swoole-db'
-                ],
                 'masterConfig' => [
                     'class'     => 'boot\db\Mysql',
-                    'host'      => '127.0.0.1',
+                    'host'      => '10.16.49.95',
                     'port'      => 3306,
                     'user'      => 'ent',
                     'password'  => 'dAKjh52qXVCWzZcE',

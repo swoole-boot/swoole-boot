@@ -7,6 +7,8 @@
  */
 namespace boot\db;
 
+use boot\Application;
+
 /**
  * Class Query
  * @package boot\db
@@ -33,6 +35,12 @@ class Query extends \cockroach\orm\Query
     public function all()
     {
         $sql = $this->sql();
+
+        /**
+         * 打印sql
+         */
+        Application::$app->server->logger->debug($sql);
+
         return $this->db->query($sql,$this->_params);
     }
 

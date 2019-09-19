@@ -22,6 +22,29 @@ use cockroach\base\Cockroach;
 class Logic extends Cockroach
 {
     /**
+     * @var static
+     * @datetime 2019/9/19 18:35
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    static protected $_instance;
+
+    /**
+     * @return static
+     * @datetime 2019/9/19 18:37
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    static public function self()
+    {
+        if(!isset(static::$_instance)) {
+            static::$_instance = new static();
+        }
+
+        return static::$_instance;
+    }
+
+    /**
      * @var string
      * @datetime 2019/9/19 13:47
      * @author roach

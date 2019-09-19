@@ -184,7 +184,7 @@ abstract class Server extends \Swoole\Server
     {
         foreach ($this->components as $key => &$component) {
             $this->$key = Container::insure($component);
-            //Container::set($key,$component);
+            Container::set($key,$component);
         }
     }
 

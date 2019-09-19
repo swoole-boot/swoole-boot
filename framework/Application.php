@@ -21,6 +21,14 @@ class Application
     use Event;
 
     /**
+     * @var static
+     * @datetime 2019/9/19 18:16
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    static public $app;
+
+    /**
      * 服务启动
      */
     const EVENT_SERVER_START = 'app:server:start';
@@ -164,6 +172,9 @@ class Application
         Runtime::enableCoroutine(true);
 
         ECli::info('starting');
+
+        static::$app = $this;
+
         $this->server->start();
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace app\models;
 
+use boot\Application;
 use boot\db\Model;
 
 /**
@@ -28,6 +29,6 @@ class User extends Model
      */
     static public function getDb()
     {
-
+        return Application::$app->server->db;
     }
 }

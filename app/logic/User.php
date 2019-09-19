@@ -17,4 +17,6 @@ class User extends Logic
      * @email jhq0113@163.com
      */
     public $modelClass = \app\models\User::class;
+
+
 }
