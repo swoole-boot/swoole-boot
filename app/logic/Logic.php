@@ -71,7 +71,7 @@ class Logic extends Cockroach
      * @author roach
      * @email jhq0113@163.com
      */
-    public function add($data = [])
+    public function create($data = [])
     {
         /**
          * @var ExecuteResult $result
