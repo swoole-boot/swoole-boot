@@ -29,6 +29,22 @@ return [
                     'class' => 'cockroach\packages\SwooleBoot'
                 ]
             ],
+            'db' => [
+                'class' => 'boot\db\Pool',
+                'logger' => [
+                    'class'    => 'cockroach\log\Seaslog',
+                    'app'      => 'db',
+                    'basePath' => '/tmp/logs/swoole-db'
+                ],
+                'masterConfig' => [
+                    'class'     => 'boot\db\Mysql',
+                    'host'      => '127.0.0.1',
+                    'port'      => 3306,
+                    'user'      => 'ent',
+                    'password'  => 'dAKjh52qXVCWzZcE',
+                    'database'  => 'ent',
+                ]
+            ]
         ]
     ]
 ];

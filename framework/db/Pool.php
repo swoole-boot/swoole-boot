@@ -16,6 +16,21 @@ use Swoole\Coroutine\Channel;
 class Pool extends Cockroach
 {
     /**
+     * @param array $config
+     * @datetime 2019/9/19 14:52
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function init($config = [])
+    {
+        $this->masterConfig = $config['masterConfig'];
+        $this->slaveConfig  = $config['slaveConfig'] ?? $this->masterConfig;
+        unset($config['masterConfig'],$config['slaveConfig']);
+
+        parent::init($config);
+    }
+
+    /**
      * @var ILog
      * @datetime 2019/9/17 18:51
      * @author roach
@@ -120,7 +135,16 @@ class Pool extends Cockroach
      */
     public function createConnection($isMaster = false)
     {
-        return $isMaster ? Container::insure($this->masterConfig,'boot\db\Mysql') : Container::insure($this->slaveConfig,'boot\db\Mysql');
+        if($isMaster && !isset($this->masterConfig['logger'])) {
+            $this->masterConfig['logger'] = $this->logger;
+            return Container::insure($this->masterConfig,'boot\db\Mysql');
+        }
+
+        if(!isset($this->slaveConfig['logger'])) {
+            $this->slaveConfig['logger'] = $this->logger;
+        }
+
+        return Container::insure($this->slaveConfig,'boot\db\Mysql');
     }
 
     /**

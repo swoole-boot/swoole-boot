@@ -48,4 +48,16 @@ class Query extends \cockroach\orm\Query
         $list = $this->all();
         return isset($list[0]) ? $list[0] : [];
     }
+
+    /**
+     * @return int
+     * @datetime 2019/9/19 14:10
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function count()
+    {
+        $info = $this->select('COUNT(*) AS `count`')->one();
+        return isset($info['count']) ? (int)$info['count'] : 0;
+    }
 }

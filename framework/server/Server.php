@@ -9,7 +9,7 @@ use cockroach\extensions\EFile;
 use cockroach\log\Driver;
 
 /**
- * Class Server
+ * Class Logic
  * @package boot\server
  * @property Driver $logger
  * @property Route  $router

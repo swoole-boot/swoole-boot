@@ -1,5 +1,5 @@
 <?php
-namespace app\funcs;
+namespace app\funcs\v1;
 
 use cockroach\validators\Between;
 use cockroach\validators\Callback;
@@ -20,7 +20,7 @@ use cockroach\validators\Url;
  * @author roach
  * @email jhq0113@163.com
  */
-class GetList extends Func
+class GetList extends V1
 {
     /**
      * @return array

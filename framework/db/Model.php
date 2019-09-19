@@ -94,17 +94,24 @@ abstract class Model extends Cockroach
     }
 
     /**
-     * @return Query
-     * @datetime 2019/9/17 10:55 PM
+     * @param bool $useMaster
+     * @return array|mixed
+     * @datetime 2019/9/19 14:19
      * @author roach
      * @email jhq0113@163.com
      */
-    static public function find()
+    static public function find($useMaster = false)
     {
+        $db = static::getDb();
+        //如果是连接池的话支持强制主库查询，数据库连接不存在主从
+        if($useMaster && $db instanceof Pool) {
+            $db = $db->get($useMaster);
+        }
+
         return Container::insure([
             'class' => 'boot\db\Query',
             'table' => static::$tableName,
-            'db'    => static::getDb()
+            'db'    => $db
         ]);
     }
 }
