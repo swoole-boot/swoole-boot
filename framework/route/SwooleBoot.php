@@ -109,7 +109,6 @@ class SwooleBoot extends Route
             return $this->tcpSend($server,$fd,$from_id,$packData);
         }
 
-        $package['data']['func'] = ucfirst($package['data']['func']);
         if($package['data']['func'] == 'Inner') {
             //按照请求包的序列化方式封包
             $packData = $this->packager->packBySerializeId(EReturn::error('forbidden'),$package['header']['Serialize']);
@@ -135,6 +134,7 @@ class SwooleBoot extends Route
      */
     public function route(&$server,$data,$callback)
     {
+        //支持目录
         $func = $this->funcNamespace.'\\'.$data['func'];
         if(!class_exists($func)) {
             return call_user_func($callback, EReturn::error('method not exists'));
