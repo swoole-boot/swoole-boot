@@ -27,10 +27,10 @@ class Update extends Logic
     public function rules()
     {
         return [
-            [ ['id'], Required::class, 'msg' => 'id必传'],
-            [ ['phone'], Phone::class, 'allowNull' => true],
-            [ ['username'], Length::class, 'allowNull' => true, 'max' => 255, 'min' => 6, 'msg' => '用户名长度不合法'],
-            [ ['truename'], Length::class, 'allowNull' => true, 'max' => 255, 'min' => 6, 'msg' => '真实姓名长度不合法'],
+            [ ['id'], Required::class, 'type' => EFilter::TYPE_INT, 'msg' => 'id必传'],
+            [ ['phone'], Phone::class, 'type' => EFilter::TYPE_INT ],
+            [ ['username'], Length::class, 'max' => 255, 'min' => 6, 'msg' => '用户名长度不合法'],
+            [ ['truename'], Length::class, 'max' => 255, 'min' => 6, 'msg' => '真实姓名长度不合法'],
         ];
     }
 
@@ -42,21 +42,20 @@ class Update extends Logic
      */
     public function run()
     {
-        $id = EFilter::fInt('id',$this->params);
         $user = User::self();
-        $info = $user->info($id);
+        $info = $user->info($this->params['id']);
         if(empty($info)) {
             return EReturn::error('用户不存在',EReturn::ERROR_PARAMS);
         }
 
         $user->updateWithLock([
-            'username' => EFilter::fStr('username',$this->params,$info['username']),
-            'truename' => EFilter::fStr('truename',$this->params,$info['truename']),
-            'phone'   => EFilter::fStr('phone',$this->params,$info['phone']),
-        ],$id);
+            'username' => $this->params['username'] ?? $info['username'],
+            'truename' => $this->params['truename'] ?? $info['truename'],
+            'phone'    => $this->params['phone']    ?? $info['phone'],
+        ],$this->params['id']);
 
         return EReturn::success([
-            'info' => $user->info($id)
+            'info' => $user->info($this->params['id'])
         ]);
     }
 }

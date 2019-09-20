@@ -166,6 +166,8 @@ class SwooleBoot extends Route
             }
         }
 
+        $func->params = $data['params'];
+
         $data = $func->run();
 
         $result = $func->afterRun($data);

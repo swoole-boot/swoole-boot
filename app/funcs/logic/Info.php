@@ -2,6 +2,7 @@
 namespace app\funcs\logic;
 
 use app\logic\User;
+use cockroach\extensions\EFilter;
 use cockroach\extensions\EReturn;
 use cockroach\validators\Min;
 use cockroach\validators\Required;
@@ -25,7 +26,7 @@ class Info extends Logic
     {
         return [
             [ ['id'], Required::class ,'msg' => 'id必传' ],
-            [ ['id'], Min::class , 'min' => 1, 'msg' => 'id格式错误' ],
+            [ ['id'], Min::class , 'type' => EFilter::TYPE_INT, 'min' => 1, 'msg' => 'id格式错误' ],
         ];
     }
 

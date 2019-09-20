@@ -4,7 +4,7 @@ namespace app\funcs\logic;
 use app\logic\User;
 use cockroach\extensions\EFilter;
 use cockroach\extensions\EReturn;
-use cockroach\validators\Required;
+use cockroach\validators\Min;
 
 /**
  * Class Delete
@@ -24,7 +24,7 @@ class Delete extends Logic
     public function rules()
     {
         return [
-            [ ['id'], Required::class,'msg' => 'id必传' ]
+            [ ['id'], Min::class, 'type' => EFilter::TYPE_INT, 'min' => 1, 'msg' => 'id必传' ]
         ];
     }
 
@@ -36,8 +36,7 @@ class Delete extends Logic
      */
     public function run()
     {
-        $id = EFilter::fInt('id',$this->params);
-        User::self()->delete($id);
+        User::self()->delete($this->params['id']);
         return EReturn::success();
     }
 }
