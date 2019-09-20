@@ -29,6 +29,17 @@ return [
                     'class' => 'cockroach\packages\SwooleBoot'
                 ]
             ],
+            'db' => [
+                'class' => 'boot\db\Pool',
+                'masterConfig' => [
+                    'class'     => 'boot\db\Mysql',
+                    'host'      => '10.16.49.95',
+                    'port'      => 3306,
+                    'user'      => 'ent',
+                    'password'  => 'dAKjh52qXVCWzZcE',
+                    'database'  => 'ent',
+                ]
+            ]
         ]
     ]
 ];

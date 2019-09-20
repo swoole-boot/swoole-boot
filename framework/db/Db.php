@@ -1,7 +1,9 @@
 <?php
 namespace boot\db;
 
+use boot\Application;
 use cockroach\base\Cockroach;
+use cockroach\log\ILog;
 
 /**
  * Class Db
@@ -18,6 +20,29 @@ abstract class Db extends Cockroach
      * @email jhq0113@163.com
      */
     protected $_client;
+
+    /**
+     * @var ILog
+     * @datetime 2019/9/19 18:57
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $logger = [];
+
+    /**
+     * @param array $config
+     * @datetime 2019/9/19 18:57
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function init($config = [])
+    {
+        if(!isset($config['logger'])) {
+            $this->logger = Application::$app->server->logger;
+        }
+
+        parent::init($config);
+    }
 
     /**
      * @datetime 2019/9/17 18:08

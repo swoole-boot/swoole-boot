@@ -1,6 +1,7 @@
 <?php
 namespace boot\db;
 
+use boot\Application;
 use cockroach\base\Cockroach;
 use cockroach\base\Container;
 use cockroach\log\ILog;
@@ -15,6 +16,26 @@ use Swoole\Coroutine\Channel;
  */
 class Pool extends Cockroach
 {
+    /**
+     * @param array $config
+     * @datetime 2019/9/19 14:52
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function init($config = [])
+    {
+        $this->masterConfig = $config['masterConfig'];
+        $this->slaveConfig  = $config['slaveConfig'] ?? $this->masterConfig;
+        unset($config['masterConfig'],$config['slaveConfig']);
+
+        //初始化日志
+        if(!isset($config['logger'])) {
+            $this->logger = Application::$app->server->logger;
+        }
+
+        parent::init($config);
+    }
+
     /**
      * @var ILog
      * @datetime 2019/9/17 18:51
@@ -120,7 +141,7 @@ class Pool extends Cockroach
      */
     public function createConnection($isMaster = false)
     {
-        return $isMaster ? Container::insure($this->masterConfig,'boot\db\Mysql') : Container::insure($this->slaveConfig,'boot\db\Mysql');
+        return Container::insure($this->slaveConfig,'boot\db\Mysql');
     }
 
     /**

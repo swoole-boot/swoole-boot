@@ -133,6 +133,11 @@ class Mysql extends Db
             return [];
         }
 
+        $this->logger->debug('sql:{sql},params:{params}',[
+            'sql'     => $sql,
+            'params'  => json_encode($params,JSON_UNESCAPED_UNICODE)
+        ]);
+
         return $statement->execute($params);
     }
 
@@ -155,6 +160,11 @@ class Mysql extends Db
         }
 
         $statement->execute($params);
+
+        $this->logger->debug('sql:{sql},params:{params}',[
+            'sql'     => $sql,
+            'params'  => json_encode($params,JSON_UNESCAPED_UNICODE)
+        ]);
 
         return Container::insure([
             'class'        => 'boot\db\ExecuteResult',

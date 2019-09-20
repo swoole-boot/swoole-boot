@@ -1,6 +1,7 @@
 <?php
 namespace boot\db;
 
+use boot\Application;
 use cockroach\base\Cockroach;
 use cockroach\base\Container;
 
@@ -60,6 +61,7 @@ abstract class Model extends Cockroach
      */
     static public function multiInsert($rows, $ignore = false)
     {
+        $params = [];
         $sql = Query::multiInsert(static::$tableName,$rows,$params,$ignore);
         return static::getDb()->execute($sql,$params);
     }
@@ -75,6 +77,7 @@ abstract class Model extends Cockroach
      */
     static public function updateAll($set, $where, $isOr = false)
     {
+        $params = [];
         $sql = Query::updateAll(static::$tableName,$set,$where,$params,$isOr);
         return static::getDb()->execute($sql,$params);
     }
@@ -89,22 +92,30 @@ abstract class Model extends Cockroach
      */
     static public function deleteAll($where, $isOr = false)
     {
+        $params = [];
         $sql = Query::deleteAll(static::$tableName,$where,$params,$isOr);
         return static::getDb()->execute($sql,$params);
     }
 
     /**
-     * @return Query
-     * @datetime 2019/9/17 10:55 PM
+     * @param bool $useMaster
+     * @return array|mixed
+     * @datetime 2019/9/19 14:19
      * @author roach
      * @email jhq0113@163.com
      */
-    static public function find()
+    static public function find($useMaster = false)
     {
+        $db = static::getDb();
+        //如果是连接池的话支持强制主库查询，数据库连接不存在主从
+        if($useMaster && $db instanceof Pool) {
+            $db = $db->get($useMaster);
+        }
+
         return Container::insure([
             'class' => 'boot\db\Query',
             'table' => static::$tableName,
-            'db'    => static::getDb()
+            'db'    => $db
         ]);
     }
 }

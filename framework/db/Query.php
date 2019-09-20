@@ -7,6 +7,8 @@
  */
 namespace boot\db;
 
+use boot\Application;
+
 /**
  * Class Query
  * @package boot\db
@@ -33,6 +35,12 @@ class Query extends \cockroach\orm\Query
     public function all()
     {
         $sql = $this->sql();
+
+        /**
+         * 打印sql
+         */
+        Application::$app->server->logger->debug($sql);
+
         return $this->db->query($sql,$this->_params);
     }
 
@@ -47,5 +55,17 @@ class Query extends \cockroach\orm\Query
         $this->limit(1);
         $list = $this->all();
         return isset($list[0]) ? $list[0] : [];
+    }
+
+    /**
+     * @return int
+     * @datetime 2019/9/19 14:10
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function count()
+    {
+        $info = $this->select('COUNT(*) AS `count`')->one();
+        return isset($info['count']) ? (int)$info['count'] : 0;
     }
 }
