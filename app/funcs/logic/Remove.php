@@ -24,7 +24,7 @@ class Remove extends Logic
     public function rules()
     {
         return [
-            ['id'], Required::class,'msg' => 'id必传'
+            [ ['id'], Required::class,'msg' => 'id必传' ]
         ];
     }
 

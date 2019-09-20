@@ -80,6 +80,38 @@ class Logic extends Cockroach
         return $result->lastInsertId;
     }
 
+    /**检索一个
+     * @param array $where
+     * @param array $group
+     * @param array $order
+     * @param bool $useMaster
+     * @return array
+     * @datetime 2019/9/20 11:39
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function findOne($where = [], $group = [], $order = [], $useMaster = false)
+    {
+        return $this->_getQuery($useMaster)->where($where)->group($group)->order($order)->one();
+    }
+
+    /**检索多个
+     * @param array $where
+     * @param array $group
+     * @param array $order
+     * @param int $offset
+     * @param int $limit
+     * @param bool $useMaster
+     * @return array
+     * @datetime 2019/9/20 11:40
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function findAll($where = [], $group = [], $order = [], $offset = 0, $limit = 1000,$useMaster = false)
+    {
+        return $this->_getQuery($useMaster)->where($where)->group($group)->order($order)->offset($offset)->limit($limit)->all();
+    }
+
     /**获取详情
      * @param int   $id
      * @param bool  $useMaster
@@ -122,7 +154,7 @@ class Logic extends Cockroach
         $pageSize = ($pageSize < 5) ? 5 : $pageSize;
         $data['pageSize'] = ($pageSize > 1000) ? 1000 : $pageSize;
 
-        $query = $this->_getQuery();
+        $query = $this->_getQuery($useMaster);
 
         $data['total'] = $query->where($where)
             ->count();
@@ -144,6 +176,26 @@ class Logic extends Cockroach
             ->all();
 
         return $data;
+    }
+
+    /**带乐观锁锁更新，建议使用，表中需要有`version`字段
+     * @param array $set
+     * @param int   $id
+     * @return int
+     * @datetime 2019/9/20 11:24
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function updateWithLock($set,$id)
+    {
+        $query = $this->_getQuery(true);
+        $info = $query->where([ 'id' => $id])->one();
+
+        if(empty($info)) {
+           return 0;
+        }
+
+        return $this->update($set, $id, $info['version']);
     }
 
     /**

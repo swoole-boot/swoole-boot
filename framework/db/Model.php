@@ -1,6 +1,7 @@
 <?php
 namespace boot\db;
 
+use boot\Application;
 use cockroach\base\Cockroach;
 use cockroach\base\Container;
 
@@ -60,6 +61,7 @@ abstract class Model extends Cockroach
      */
     static public function multiInsert($rows, $ignore = false)
     {
+        $params = [];
         $sql = Query::multiInsert(static::$tableName,$rows,$params,$ignore);
         return static::getDb()->execute($sql,$params);
     }
@@ -75,6 +77,7 @@ abstract class Model extends Cockroach
      */
     static public function updateAll($set, $where, $isOr = false)
     {
+        $params = [];
         $sql = Query::updateAll(static::$tableName,$set,$where,$params,$isOr);
         return static::getDb()->execute($sql,$params);
     }
@@ -89,6 +92,7 @@ abstract class Model extends Cockroach
      */
     static public function deleteAll($where, $isOr = false)
     {
+        $params = [];
         $sql = Query::deleteAll(static::$tableName,$where,$params,$isOr);
         return static::getDb()->execute($sql,$params);
     }

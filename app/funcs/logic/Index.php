@@ -23,7 +23,9 @@ class Index extends Logic
     public function run()
     {
         $data = User::self()->index('*',
-            [] ,
+            [
+                'is_on' => 1
+            ] ,
             [ 'id' => SORT_DESC ],
             EFilter::fInt('page',$this->params),
             EFilter::fInt('pageSize',$this->params)

@@ -4,6 +4,8 @@ namespace app\funcs\logic;
 use app\logic\User;
 use cockroach\extensions\EFilter;
 use cockroach\extensions\EReturn;
+use cockroach\validators\Length;
+use cockroach\validators\Phone;
 
 /**
  * Class Create
@@ -22,7 +24,11 @@ class Create extends Logic
      */
     public function rules()
     {
-        return $this->rules;
+        return [
+            [ ['phone'], Phone::class],
+            [ ['username'], Length::class, 'max' => 255, 'min' => 6, 'msg' => '用户名长度不合法'],
+            [ ['truename'], Length::class, 'max' => 255, 'min' => 6, 'msg' => '真实姓名长度不合法'],
+        ];
     }
 
     /**
@@ -39,8 +45,12 @@ class Create extends Logic
             'phone' => EFilter::fStr('phone',$this->params),
         ]);
 
+        if($userId < 1) {
+            return EReturn::error('添加失败',EReturn::ERROR_PARAMS);
+        }
+
         return EReturn::success([
-            'id' => $userId
+            'info' => User::self()->info($userId,true)
         ]);
     }
 }

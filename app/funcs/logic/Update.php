@@ -4,6 +4,8 @@ namespace app\funcs\logic;
 use app\logic\User;
 use cockroach\extensions\EFilter;
 use cockroach\extensions\EReturn;
+use cockroach\validators\Length;
+use cockroach\validators\Phone;
 use cockroach\validators\Required;
 
 /**
@@ -24,9 +26,12 @@ class Update extends Logic
      */
     public function rules()
     {
-        return array_merge($this->rules,[
-            ['id'], Required::class,'msg' => 'id必传'
-        ]);
+        return [
+            [ ['id'], Required::class, 'msg' => 'id必传'],
+            [ ['phone'], Phone::class, 'allowNull' => true],
+            [ ['username'], Length::class, 'allowNull' => true, 'max' => 255, 'min' => 6, 'msg' => '用户名长度不合法'],
+            [ ['truename'], Length::class, 'allowNull' => true, 'max' => 255, 'min' => 6, 'msg' => '真实姓名长度不合法'],
+        ];
     }
 
     /**
@@ -44,12 +49,14 @@ class Update extends Logic
             return EReturn::error('用户不存在',EReturn::ERROR_PARAMS);
         }
 
-        $user->update([
+        $user->updateWithLock([
             'username' => EFilter::fStr('username',$this->params,$info['username']),
             'truename' => EFilter::fStr('truename',$this->params,$info['truename']),
-            'phone' => EFilter::fStr('phone',$this->params,$info['phone']),
+            'phone'   => EFilter::fStr('phone',$this->params,$info['phone']),
         ],$id);
 
-        return EReturn::success();
+        return EReturn::success([
+            'info' => $user->info($id)
+        ]);
     }
 }

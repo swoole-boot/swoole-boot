@@ -37,9 +37,9 @@ class Info extends Logic
      */
     public function run()
     {
-        $data = User::self()->info($this->params['id']);
+        $data = User::self()->findOne(['id' => $this->params['id'], 'is_on' => 1]);
         return EReturn::success([
-            'info' => $data
+            'info' => empty($data) ? new \stdClass() :$data
         ]);
     }
 }
