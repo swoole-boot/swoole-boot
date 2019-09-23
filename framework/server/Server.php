@@ -2,6 +2,7 @@
 namespace boot\server;
 
 use boot\Application;
+use boot\Dispatcher\Dispatcher;
 use boot\route\Route;
 use cockroach\base\Container;
 use cockroach\extensions\ECli;
@@ -11,8 +12,9 @@ use cockroach\log\Driver;
 /**
  * Class Logic
  * @package boot\server
- * @property Driver $logger
- * @property Route  $router
+ * @property Driver      $logger
+ * @property Route       $router
+ * @property Dispatcher  $dispatcher
  * @datetime 2019/9/11 12:55
  * @author roach
  * @email jhq0113@163.com
@@ -48,6 +50,14 @@ abstract class Server extends \Swoole\Server
     {
         return $this->_app;
     }
+
+    /**
+     * @var Dispatcher
+     * @datetime 2019/9/23 10:49
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $dispatcher = [];
 
     /**
      * @var array
@@ -184,7 +194,7 @@ abstract class Server extends \Swoole\Server
     {
         foreach ($this->components as $key => &$component) {
             $this->$key = Container::insure($component);
-            Container::set($key,$component);
+            //Container::set($key,$component);
         }
     }
 

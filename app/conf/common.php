@@ -22,13 +22,18 @@ return [
                 'app'      => 'boot',
                 'basePath' => '/tmp/logs/swoole-boot'
             ],
-            //路由
-            'router'   => [
-                'class'  => 'boot\route\SwooleBoot',
+            //调度器
+            'dispatcher' => [
+                'class' => 'boot\dispatcher\SwooleBoot',
                 'packager' => [
                     'class' => 'cockroach\packages\SwooleBoot'
                 ]
             ],
+            //路由
+            'router'   => [
+                'class'  => 'boot\route\SwooleBoot',
+            ],
+            //数据库
             'db' => [
                 'class' => 'boot\db\Pool',
                 'masterConfig' => [

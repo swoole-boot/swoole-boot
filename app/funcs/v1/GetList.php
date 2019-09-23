@@ -1,6 +1,7 @@
 <?php
 namespace app\funcs\v1;
 
+use cockroach\extensions\EFilter;
 use cockroach\validators\Between;
 use cockroach\validators\Callback;
 use cockroach\validators\Email;
@@ -31,17 +32,17 @@ class GetList extends V1
     public function rules()
     {
         return [
-            [ ['id'], Required::class, 'msg' => 'id必传'],
+            [ ['id'], Required::class, 'type' => EFilter::TYPE_INT, 'msg' => 'id必传'],
             [ ['name','nickname'], Length::class, 'max' => 100, 'min' => 20, 'msg' => '长度必须为[20,100]'],
             [ ['ip'], Ip::class],
-            [ ['email'], Email::class , 'allowNull' => true ],
-            [ ['age'], Max::class, 'allowNull' => true, 'max'=> 56 , 'msg'=> '年龄最大为56'],
-            [ ['sex'], Between::class, 'allowNull' => false, 'min' => 0, 'max' => 1 , 'msg'=> 'sex只能为0或1'],
-            [ ['logo','imgUrl'], Url::class, 'allowNull' => false, 'msg'=> '不是一个有效的图片'],
-            [ ['mobile'], Phone::class, 'allowNull' => false, 'msg' => '手机号码格式错误'],
-            [ ['order'], Number::class, 'allowNull' => false, 'msg' => '订单号必须全是数字'],
+            [ ['email'], Email::class , 'require' => true ],
+            [ ['age'], Max::class, 'type' => EFilter::TYPE_INT, 'require' => true, 'max'=> 56 , 'msg'=> '年龄最大为56'],
+            [ ['sex'], Between::class, 'type' => EFilter::TYPE_INT, 'min' => 0, 'max' => 1 , 'msg'=> 'sex只能为0或1'],
+            [ ['logo','imgUrl'], Url::class, 'require' => false, 'msg'=> '不是一个有效的图片'],
+            [ ['mobile'], Phone::class, 'type' => EFilter::TYPE_INT, 'require' => true, 'msg' => '手机号码格式错误'],
+            [ ['order'], Number::class, 'type' => EFilter::TYPE_INT, 'require' => true, 'msg' => '订单号必须全是数字'],
 
-            [ ['call'], Callback::class, 'allowNull' => false, function($data){
+            [ ['call'], Callback::class, 'require' => false, function($data){
                 return false;
             } ,'msg' => '你就是没通过'],
             [ ['patter'],Pattern::class, 'pattern'=> '/^((1[3|4|5|6|7|8|9][0-9]))\d{8}$/', 'msg'=>'正则匹配未通过']

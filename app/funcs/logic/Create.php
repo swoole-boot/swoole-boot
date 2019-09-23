@@ -5,6 +5,7 @@ use app\logic\User;
 use cockroach\extensions\EFilter;
 use cockroach\extensions\EReturn;
 use cockroach\validators\Length;
+use cockroach\validators\Number;
 use cockroach\validators\Phone;
 
 /**
@@ -25,9 +26,10 @@ class Create extends Logic
     public function rules()
     {
         return [
-            [ ['phone'], Phone::class],
-            [ ['username'], Length::class, 'max' => 255, 'min' => 6, 'msg' => '用户名长度不合法'],
-            [ ['truename'], Length::class, 'max' => 255, 'min' => 6, 'msg' => '真实姓名长度不合法'],
+            [ ['phone'], Phone::class, 'require' => true, 'type' => EFilter::TYPE_INT ],
+            [ ['username'], Length::class, 'require' => true, 'max' => 255, 'min' => 6, 'msg' => '用户名长度不合法'],
+            [ ['truename'], Length::class, 'require' => true,'max' => 255, 'min' => 6, 'msg' => '真实姓名长度不合法'],
+            [ ['is_on'], Number::class, 'default' => '1', 'msg' => 'is_on不是一个数字'],
         ];
     }
 
@@ -40,9 +42,9 @@ class Create extends Logic
     public function run()
     {
         $userId = User::self()->create([
-            'username' => EFilter::fStr('username',$this->params),
-            'truename' => EFilter::fStr('truename',$this->params),
-            'phone' => EFilter::fStr('phone',$this->params),
+            'username' => $this->params['username'],
+            'truename' => $this->params['truename'],
+            'phone'    => $this->params['phone'],
         ]);
 
         if($userId < 1) {
