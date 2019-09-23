@@ -1,6 +1,8 @@
 <?php
 namespace boot\server;
 
+use boot\Func;
+
 /**
  * Class SwooleBoot
  * @package boot\server
@@ -54,6 +56,21 @@ class SwooleBoot extends Server
      */
     public function onReceive(\Swoole\Server $server, $fd, $from_id, $data)
     {
-        return $this->router->tcp($server,$fd,$from_id,$data);
+        //解包
+         $package = $this->dispatcher->tcp($server,$fd,$from_id,$data);
+         if($package) {
+             //路由
+             $func = $this->router->route($package);
+             if(!($func instanceof Func)) {
+                 return $this->dispatcher->tcpSend($server, $fd, $from_id, $func, $package);
+             }
+
+             $func->server = $server;
+             $func->logger = $server->logger;
+
+            $this->dispatcher->dispatcher($func, function($return) use ($server, $fd, $from_id, $package){
+                 return $this->dispatcher->tcpSend($server, $fd, $from_id, $return, $package);
+             });
+         }
     }
 }

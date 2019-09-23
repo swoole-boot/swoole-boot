@@ -1,6 +1,7 @@
 <?php
 namespace app\funcs\v1;
 
+use cockroach\extensions\EFilter;
 use cockroach\validators\Between;
 use cockroach\validators\Callback;
 use cockroach\validators\Email;
@@ -31,15 +32,15 @@ class GetList extends V1
     public function rules()
     {
         return [
-            [ ['id'], Required::class, 'msg' => 'id必传'],
+            [ ['id'], Required::class, 'type' => EFilter::TYPE_INT, 'msg' => 'id必传'],
             [ ['name','nickname'], Length::class, 'max' => 100, 'min' => 20, 'msg' => '长度必须为[20,100]'],
             [ ['ip'], Ip::class],
             [ ['email'], Email::class , 'require' => true ],
-            [ ['age'], Max::class, 'require' => true, 'max'=> 56 , 'msg'=> '年龄最大为56'],
-            [ ['sex'], Between::class, 'require' => false, 'min' => 0, 'max' => 1 , 'msg'=> 'sex只能为0或1'],
+            [ ['age'], Max::class, 'type' => EFilter::TYPE_INT, 'require' => true, 'max'=> 56 , 'msg'=> '年龄最大为56'],
+            [ ['sex'], Between::class, 'type' => EFilter::TYPE_INT, 'min' => 0, 'max' => 1 , 'msg'=> 'sex只能为0或1'],
             [ ['logo','imgUrl'], Url::class, 'require' => false, 'msg'=> '不是一个有效的图片'],
-            [ ['mobile'], Phone::class, 'require' => false, 'msg' => '手机号码格式错误'],
-            [ ['order'], Number::class, 'require' => false, 'msg' => '订单号必须全是数字'],
+            [ ['mobile'], Phone::class, 'type' => EFilter::TYPE_INT, 'require' => true, 'msg' => '手机号码格式错误'],
+            [ ['order'], Number::class, 'type' => EFilter::TYPE_INT, 'require' => true, 'msg' => '订单号必须全是数字'],
 
             [ ['call'], Callback::class, 'require' => false, function($data){
                 return false;

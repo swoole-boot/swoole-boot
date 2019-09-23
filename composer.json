@@ -22,7 +22,8 @@
   "require": {
     "php": "^7.0",
     "jhq0113/cockroach":"*",
-    "ext-swoole":"4.*"
+    "ext-swoole":"4.*",
+    "ext-mbstring":"*"
   },
   "require-dev": {
   },
