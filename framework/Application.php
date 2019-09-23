@@ -54,6 +54,14 @@ class Application
     const EVENT_WORKER_ERROR = 'app:worker:error';
 
     /**
+     * @var string
+     * @datetime 2019/9/23 15:28
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $name = 'boot';
+
+    /**
      * @var Server
      * @datetime 2019/9/11 13:27
      * @author roach
