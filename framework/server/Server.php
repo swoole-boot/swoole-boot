@@ -8,6 +8,7 @@ use cockroach\base\Container;
 use cockroach\extensions\ECli;
 use cockroach\extensions\EFile;
 use cockroach\log\Driver;
+use Swoole\Table;
 
 /**
  * Class Logic
@@ -50,6 +51,14 @@ abstract class Server extends \Swoole\Server
     {
         return $this->_app;
     }
+
+    /**
+     * @var Table
+     * @datetime 2019/9/23 15:52
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $table;
 
     /**
      * @var Dispatcher
@@ -147,6 +156,12 @@ abstract class Server extends \Swoole\Server
         //绑定事件
         $this->bindEvent();
 
+        $this->table = new Table(1024);
+        $this->table->column('value',Table::TYPE_INT,8);
+        $this->table->create();
+        $this->table->set('registerLock',[
+            'value' => 0
+        ]);
         return true;
     }
 
@@ -194,7 +209,6 @@ abstract class Server extends \Swoole\Server
     {
         foreach ($this->components as $key => &$component) {
             $this->$key = Container::insure($component);
-            //Container::set($key,$component);
         }
     }
 
@@ -209,6 +223,11 @@ abstract class Server extends \Swoole\Server
     {
         //初始化组件
         $this->_initComponents();
+
+        //注册两次
+        if($this->table->incr('registerLock','value') < 3) {
+            $this->dispatcher->registerService();
+        }
 
         $this->_app->trigger(Application::EVENT_WORKER_START);
     }

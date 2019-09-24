@@ -1,6 +1,7 @@
 <?php
 return [
     'class'  => 'boot\Application',
+    'name'   => 'swoole-boot',
     'host'   => '0.0.0.0',
     'port'   => 888,
     'server' => [
@@ -25,6 +26,14 @@ return [
             //调度器
             'dispatcher' => [
                 'class' => 'boot\dispatcher\SwooleBoot',
+                //服务注册器
+                'register' => [
+                    'class' => 'cockroach\consul\Client',
+                ],
+                'registerName' => 'boot',
+                'registerNode' => 'boot',
+                'registerHost' => '10.16.49.95',
+                'registerPort' => 2088,
                 'packager' => [
                     'class' => 'cockroach\packages\SwooleBoot'
                 ]
@@ -38,11 +47,11 @@ return [
                 'class' => 'boot\db\Pool',
                 'masterConfig' => [
                     'class'     => 'boot\db\Mysql',
-                    'host'      => '10.16.49.95',
+                    'host'      => '127.0.0.1',
                     'port'      => 3306,
-                    'user'      => 'ent',
-                    'password'  => 'dAKjh52qXVCWzZcE',
-                    'database'  => 'ent',
+                    'user'      => 'boot',
+                    'password'  => 'adfassdfasdfassdf',
+                    'database'  => 'boot',
                 ]
             ]
         ]
