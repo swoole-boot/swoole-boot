@@ -140,7 +140,10 @@ abstract class Dispatcher extends Cockroach
             ]
         ]);
 
-        $this->register->register($service);
+        $classes = class_implements('boot/Func');
+        Application::$app->server->logger->error(json_encode($service->toArray()));
+        //\cockroach\extensions\EFile::write('/tmp/class.log',json_encode($service->toArray()).PHP_EOL);
+        //$this->register->register($service);
     }
 
     /**
