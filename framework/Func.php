@@ -15,6 +15,22 @@ use cockroach\log\Driver;
  */
 abstract class Func extends Cockroach
 {
+    /**是否自动注册
+     * @var bool
+     * @datetime 2019/9/24 14:20
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $autoRegister = true;
+
+    /**服务注册的meta key
+     * @var string
+     * @datetime 2019/9/24 11:47
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $id;
+
     /**
      * @var Server
      * @datetime 2019/9/13 14:57

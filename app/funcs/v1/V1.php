@@ -1,7 +1,6 @@
 <?php
 namespace app\funcs\v1;
 
-use app\funcs\Func;
 
 /**
  * Class V1
@@ -10,7 +9,7 @@ use app\funcs\Func;
  * @author roach
  * @email jhq0113@163.com
  */
-class V1 extends Func
+class V1 extends \boot\Func
 {
     /**
      * @var string
@@ -19,4 +18,15 @@ class V1 extends Func
      * @email jhq0113@163.com
      */
     public $version = 'v1';
+
+    /**
+     * @return mixed|void
+     * @datetime 2019/9/24 14:24
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function run()
+    {
+
+    }
 }

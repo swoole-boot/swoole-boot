@@ -119,6 +119,15 @@ abstract class Dispatcher extends Cockroach
      */
     public function registerService()
     {
+        $serviceMeta = Application::$app->server->router->getFuncs();
+        //consul的metaData的value长度不能超过512
+        array_map(function ($value){
+            if(strlen($value) > 512) {
+                return substr($value,0,512);
+            }
+        }, $serviceMeta);
+        //规定协议
+        $serviceMeta['protocal'] = 'swoole-boot';
 
         /**
          * @var Service $service
@@ -131,6 +140,7 @@ abstract class Dispatcher extends Cockroach
             'address'        => $this->registerHost ?? Application::$app->host,
             'serviceAddress' => $this->registerHost ?? Application::$app->host,
             'servicePort'    => $this->registerPort ?? Application::$app->port,
+            'serviceMeta'    => $serviceMeta,
             'check'          => [
                 "id"        => $this->registerHost."_".$this->registerPort.'_port',
                 "name"      => $this->registerName,

@@ -1,7 +1,8 @@
 <?php
 namespace app\funcs\logic;
 
-use app\funcs\Func;
+
+use boot\Func;
 
 /**
  * Class Logic
@@ -12,5 +13,14 @@ use app\funcs\Func;
  */
 class Logic extends Func
 {
-
+    /**
+     * @return mixed|void
+     * @datetime 2019/9/24 14:31
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public function run()
+    {
+        // TODO: Implement run() method.
+    }
 }

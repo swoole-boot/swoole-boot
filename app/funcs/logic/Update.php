@@ -17,7 +17,6 @@ use cockroach\validators\Required;
  */
 class Update extends Logic
 {
-
     /**
      * @return array
      * @datetime 2019/9/19 19:13
