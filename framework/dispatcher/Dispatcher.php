@@ -2,6 +2,7 @@
 namespace boot\dispatcher;
 
 use boot\Application;
+use boot\extensions\ESwoole;
 use boot\Func;
 use cockroach\base\Cockroach;
 use cockroach\base\Container;
@@ -129,25 +130,38 @@ abstract class Dispatcher extends Cockroach
         //规定协议
         $serviceMeta['protocal'] = 'swoole-boot';
 
+        $this->registerHost = $this->registerHost ?? ESwoole::getLanIp();
+        $this->registerHost = empty($this->registerHost) ? Application::$app->host : $this->registerHost;
+        $this->registerPort = $this->registerPort ?? Application::$app->port;
+        $this->registerNode = $this->registerNode ?? $this->registerHost;
+        $this->registerName = $this->registerName ?? Application::$app->name;
+
         /**
          * @var Service $service
          */
         $service = Container::insure([
             'class'          => 'cockroach\consul\Service',
             'dataCenter'     => $this->register->dataCenter,
-            'serviceName'    => $this->registerName ?? Application::$app->name,
-            'node'           => $this->registerNode ?? Application::$app->name,
-            'address'        => $this->registerHost ?? Application::$app->host,
-            'serviceAddress' => $this->registerHost ?? Application::$app->host,
-            'servicePort'    => $this->registerPort ?? Application::$app->port,
+            'serviceName'    => $this->registerName,
+            'node'           => $this->registerNode,
+            'address'        => $this->registerHost,
+            'serviceAddress' => $this->registerHost,
+            'servicePort'    => $this->registerPort,
             'serviceMeta'    => $serviceMeta,
+            'lan'            => $this->registerHost,
+            'wan'            => $this->registerHost,
             'check'          => [
-                "id"        => $this->registerHost."_".$this->registerPort.'_port',
-                "name"      => $this->registerName,
-                "tcp"       => $this->registerHost.":".$this->registerPort,
-                "interval"  => "10s",
-                "timeout"   => "10s"
-            ]
+                    'CheckID'   => $this->registerHost."_".$this->registerPort.'_port',
+                    'Name'      => $this->registerName,
+                    'Notes'     => 'swoole-boot服务端口检测',
+                    //'Status'    => 'passing',
+                    'Definition' => [
+                        'TCP' => $this->registerHost.':'.$this->registerPort,
+                        'Interval' => '3s',
+                        'Timeout'  => '1s',
+                        'DeregisterCriticalServiceAfter' => '12s'
+                    ]
+                ]
         ]);
 
         $this->register->register($service);
