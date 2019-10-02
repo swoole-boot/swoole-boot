@@ -7,7 +7,15 @@ swoole-boot
 
 ![架构图](https://github.com/swoole-boot/swoole-boot/blob/master/swoole-boot-micro-server.png?raw=true)
 
-# 2.进程管理
+# 3.安装方式
+
+```bash
+#composer create-project cockroach/elephant 目录 版本
+#如：
+composer create-project cockroach/swoole-boot boot 1.0.0
+```
+
+# 3.进程管理
 
 ```bash
 #启动
