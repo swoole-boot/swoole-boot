@@ -17,22 +17,6 @@ use cockroach\extensions\EReturn;
 class SwooleBoot extends Route
 {
     /**
-     * @var string
-     * @datetime 2019/9/23 11:41
-     * @author roach
-     * @email jhq0113@163.com
-     */
-    public $separator = ':';
-
-    /**
-     * @var string
-     * @datetime 2019/9/12 13:37
-     * @author roach
-     * @email jhq0113@163.com
-     */
-    public $funcNamespace = 'app\funcs';
-
-    /**
      * @param array $package
      * @return  Func | array
      * @datetime 2019/9/23 13:20

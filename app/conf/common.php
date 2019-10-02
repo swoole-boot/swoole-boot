@@ -30,8 +30,8 @@ return [
                 'register' => [
                     'class' => 'cockroach\consul\Client',
                 ],
-                'registerName' => 'boot',
-                'registerNode' => 'boot',
+                //'registerName' => 'boot',
+                //'registerNode' => '10.16.49.95',
                 'registerHost' => '10.16.49.95',
                 'registerPort' => 2088,
                 'packager' => [

@@ -13,6 +13,14 @@ use cockroach\extensions\EReturn;
 class Func extends \boot\Func
 {
     /**
+     * @var string
+     * @datetime 2019/9/24 11:47
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $id = 'hello';
+
+    /**
      * @return mixed|void
      * @datetime 2019/9/12 13:41
      * @author roach
