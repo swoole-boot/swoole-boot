@@ -128,7 +128,7 @@ abstract class Dispatcher extends Cockroach
             }
         }, $serviceMeta);
         //规定协议
-        $serviceMeta['protocal'] = 'swoole-boot';
+        $serviceMeta['protocol'] = 'swoole-boot';
 
         $this->registerHost = $this->registerHost ?? ESwoole::getLanIp();
         $this->registerHost = empty($this->registerHost) ? Application::$app->host : $this->registerHost;
