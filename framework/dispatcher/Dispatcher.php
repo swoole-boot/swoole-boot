@@ -29,6 +29,14 @@ abstract class Dispatcher extends Cockroach
      */
     public $register = [];
 
+    /**是否自动注册
+     * @var bool
+     * @datetime 2019/10/8 16:46
+     * @author roach
+     * @email jhq0113@163.com
+     */
+    public $autoRegister = false;
+
     /**
      * @var string
      * @datetime 2019/9/23 15:41
@@ -154,7 +162,7 @@ abstract class Dispatcher extends Cockroach
                     'CheckID'   => $this->registerHost."_".$this->registerPort.'_port',
                     'Name'      => $this->registerName,
                     'Notes'     => 'swoole-boot服务端口检测',
-                    //'Status'    => 'passing',
+                    'Status'    => 'passing',
                     'Definition' => [
                         'TCP' => $this->registerHost.':'.$this->registerPort,
                         'Interval' => '3s',
@@ -164,10 +172,7 @@ abstract class Dispatcher extends Cockroach
                 ]
         ]);
 
-        $classes = class_implements('boot/Func');
-        Application::$app->server->logger->error(json_encode($service->toArray()));
-        //\cockroach\extensions\EFile::write('/tmp/class.log',json_encode($service->toArray()).PHP_EOL);
-        //$this->register->register($service);
+        $this->register->register($service);
     }
 
     /**

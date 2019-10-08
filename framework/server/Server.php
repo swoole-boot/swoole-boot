@@ -224,9 +224,12 @@ abstract class Server extends \Swoole\Server
         //初始化组件
         $this->_initComponents();
 
-        //注册两次
-        if($this->table->incr('registerLock','value') < 3) {
-            $this->dispatcher->registerService();
+        //如果开启自动注册
+        if($this->dispatcher->autoRegister) {
+            //注册两次
+            if($this->table->incr('registerLock','value') < 3) {
+                $this->dispatcher->registerService();
+            }
         }
 
         $this->_app->trigger(Application::EVENT_WORKER_START);
