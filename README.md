@@ -3,6 +3,9 @@ swoole-boot
 
 # [依赖软件包地址](https://github.com/swoole-boot/soft)
 
+* 1.依赖安装方式可以参考上方地址
+* 2.本项目应用不依赖nginx，具体依赖项可以参考[cockroach/swoole-boot](https://packagist.org/packages/cockroach/swoole-boot)
+
 # 1.服务基础架构设计
 
 ![架构图](https://github.com/swoole-boot/swoole-boot/blob/master/swoole-boot-micro-server.png?raw=true)
