@@ -26,6 +26,7 @@ return [
             //调度器
             'dispatcher' => [
                 'class' => 'boot\dispatcher\SwooleBoot',
+                'autoRegister' => true,
                 //服务注册器
                 'register' => [
                     'class' => 'cockroach\consul\Client',
