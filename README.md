@@ -12,7 +12,7 @@ swoole-boot
 ```bash
 #composer create-project cockroach/elephant 目录 版本
 #如：
-composer create-project cockroach/swoole-boot boot 1.0.0
+composer create-project cockroach/swoole-boot boot 1.0.1
 ```
 
 # 3.进程管理
